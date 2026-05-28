@@ -9,6 +9,28 @@ class DepartmentSerializer(serializers.ModelSerializer):
 
         model = Department
         fields = '__all__'
+        validators = [serializers.UniqueTogetherValidator(fields=['name', 'parent_id'], queryset=Department.objects.all())]
+
+    def validate_parent_id(self, parent):
+
+        department = self.instance
+
+        if not department or not parent:
+            return parent
+
+        if department.id == parent.id:
+            raise serializers.ValidationError('Department cannot be its own parent.')
+
+        current = parent
+
+        while current:
+            if department.id == current.id:
+                raise serializers.ValidationError('Cyclic dependency detected')
+
+            current = current.parent_id
+
+        return parent
+
 
 class EmployeeSerializer(serializers.ModelSerializer):
 
@@ -20,6 +42,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
 
 class RecursiveDepartmentSerializer(serializers.ModelSerializer):
+    """ Сериализатор для получения детальной информации о подразделении """
 
     employees = serializers.SerializerMethodField()
     children = serializers.SerializerMethodField()
