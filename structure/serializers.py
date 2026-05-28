@@ -9,7 +9,6 @@ class DepartmentSerializer(serializers.ModelSerializer):
 
         model = Department
         fields = '__all__'
-        validators = [serializers.UniqueTogetherValidator(fields=['name', 'parent_id'], queryset=Department.objects.all())]
 
     def validate_parent_id(self, parent):
 

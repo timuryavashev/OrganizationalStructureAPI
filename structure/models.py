@@ -12,6 +12,13 @@ class Department(models.Model):
         verbose_name = 'Подразделение'
         verbose_name_plural = 'Подразделения'
 
+        constraints = [
+            models.UniqueConstraint(
+                fields=['name', 'parent_id'],
+                name='unique_department_per_parent'
+            )
+        ]
+
     def __str__(self):
         return self.name
 
