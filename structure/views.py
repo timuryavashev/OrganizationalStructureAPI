@@ -8,11 +8,19 @@ from structure.serializers import DepartmentSerializer, EmployeeSerializer, Recu
 
 
 class DepartmentViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet для работы с подразделениями:
+    - создание
+    - получение списка и детальной информации
+    - обновление
+    - удаление
+    """
 
     serializer_class = DepartmentSerializer
     queryset = Department.objects.all()
 
     def retrieve(self, request: Response, *args: tuple, **kwargs: dict) -> Response:
+        """ Получение детальной информации о подразделении """
 
         department = self.get_object()
 
@@ -33,6 +41,7 @@ class DepartmentViewSet(viewsets.ModelViewSet):
 
     @transaction.atomic
     def destroy(self, request: Response, *args: tuple, **kwargs: dict) -> Response:
+        """ Удаление подразделения """
 
         department = self.get_object()
 
@@ -79,6 +88,7 @@ class DepartmentViewSet(viewsets.ModelViewSet):
 
 
 class EmployeeCreateAPIView(generics.CreateAPIView):
+    """ APIView для создания сотрудника """
 
     serializer_class = EmployeeSerializer
 

@@ -6,6 +6,7 @@ from structure.models import Department, Employee
 
 
 class DepartmentSerializer(serializers.ModelSerializer):
+    """ Сериализатор для создания и обновления подразделений """
 
     class Meta:
 
@@ -13,6 +14,10 @@ class DepartmentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def validate_parent_id(self, parent: Department | None) -> Department | None:
+        """
+        Проверка на отсутствии цикла в дереве - нельзя переместить подразделение внутрь своего дерева,
+        а тк же сделать родителем самого себя
+        """
 
         department = self.instance
 
@@ -34,6 +39,7 @@ class DepartmentSerializer(serializers.ModelSerializer):
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
+    """ Сериализатор для создания сотрудников """
 
     class Meta:
 
