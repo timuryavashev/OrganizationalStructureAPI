@@ -1,3 +1,5 @@
+from typing import Any
+
 from rest_framework import serializers
 
 from structure.models import Department, Employee
@@ -10,7 +12,7 @@ class DepartmentSerializer(serializers.ModelSerializer):
         model = Department
         fields = '__all__'
 
-    def validate_parent_id(self, parent):
+    def validate_parent_id(self, parent: Department | None) -> Department | None:
 
         department = self.instance
 
@@ -52,12 +54,13 @@ class RecursiveDepartmentSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'name',
+            'parent_id',
             'created_at',
             'employees',
             'children',
         ]
 
-    def get_employees(self, obj):
+    def get_employees(self, obj: Department) -> list[dict[str, Any]]:
 
         include_employees = self.context.get('include_employees', True)
 
@@ -68,7 +71,7 @@ class RecursiveDepartmentSerializer(serializers.ModelSerializer):
 
         return EmployeeSerializer(employees, many=True).data
 
-    def get_children(self, obj):
+    def get_children(self, obj: Department) -> list[dict[str, Any]]:
 
         depth = self.context.get('depth', 1)
 

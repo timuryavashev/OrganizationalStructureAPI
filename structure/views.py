@@ -12,7 +12,7 @@ class DepartmentViewSet(viewsets.ModelViewSet):
     serializer_class = DepartmentSerializer
     queryset = Department.objects.all()
 
-    def retrieve(self, request, *args, **kwargs):
+    def retrieve(self, request: Response, *args: tuple, **kwargs: dict) -> Response:
 
         department = self.get_object()
 
@@ -32,7 +32,7 @@ class DepartmentViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @transaction.atomic
-    def destroy(self, request, *args, **kwargs):
+    def destroy(self, request: Response, *args: tuple, **kwargs: dict) -> Response:
 
         department = self.get_object()
 
@@ -82,7 +82,7 @@ class EmployeeCreateAPIView(generics.CreateAPIView):
 
     serializer_class = EmployeeSerializer
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer: EmployeeSerializer) -> None:
         """Переопределяем perform_create для установки department"""
 
         department_id = self.kwargs.get('department_id')
