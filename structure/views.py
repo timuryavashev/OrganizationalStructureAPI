@@ -41,7 +41,11 @@ class DepartmentViewSet(viewsets.ModelViewSet):
 
     @transaction.atomic
     def destroy(self, request: Response, *args: tuple, **kwargs: dict) -> Response:
-        """ Удаление подразделения """
+        """Удаление подразделения:
+         - если mode=cascade, то удаляются все дочерние подразделения и сотрудники
+         - если mode=reassign, то все дочерние подразделения и сотрудники переводятся
+         в подразделение 'reassign_to_department_id'
+        """
 
         department = self.get_object()
 
@@ -78,6 +82,7 @@ class DepartmentViewSet(viewsets.ModelViewSet):
                 )
 
             Employee.objects.filter(department_id=department).update(department_id=new_department)
+            department.children.update(parent_id=new_department)
 
             department.delete()
 
